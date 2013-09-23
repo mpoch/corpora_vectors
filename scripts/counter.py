@@ -29,7 +29,7 @@ def main():
     (options, args) = parser.parse_args()
 
     #Mandatory arguments    
-    if len(args) != 1:
+    if len(args) != 2:
         parser.error("incorrect number of arguments")
      
     #####Setting up logs!
@@ -52,11 +52,11 @@ def main():
 
     words={}
     
-    output_byid = codecs.open('05-'+dirname+'-lemmas.byid', 'w')
-    output_total = codecs.open('05-'+dirname+'-lemmas.total', 'w')
-    #output_tfidf = codecs.open('05-'+dirname+'-tfidf', 'w')
-    #output_col_tfidf = codecs.open('05-'+dirname+'-col-tfidf', 'w')
-    #output_df = codecs.open('05-'+dirname+'-word-df', 'w')
+    output_byid = codecs.open(os.path.join(output_folder, '-lemmas.byid'), 'w')
+    output_total = codecs.open(os.path.join(output_folder, '-lemmas.total'), 'w')
+    #output_tfidf = codecs.open('05-'+output_folder+'-tfidf', 'w')
+    #output_col_tfidf = codecs.open('05-'+output_folder+'-col-tfidf', 'w')
+    #output_df = codecs.open('05-'+output_folder+'-word-df', 'w')
 
     Nfiles=len([name for name in os.listdir(input_folder)])
     logging.info(" Number of documents: {0}".format(Nfiles))
@@ -69,7 +69,7 @@ def main():
         for f in filenames:
             #fileid=f.split('-')[0]
             fileid=f
-            #fullpath=os.path.join(root, f)
+            fullpath=os.path.join(root, f)
             logging.debug("fullpath: {0}".format(fullpath))
             maxfreq="",""
             with codecs.open( fullpath, "r", "utf-8" ) as of:
