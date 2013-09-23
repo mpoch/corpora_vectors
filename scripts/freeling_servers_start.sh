@@ -3,6 +3,7 @@
 set -e
 
 fl_dir="/home/mpoch/upf_local/tools/freeling/freeling-3.0"
+#fl_dir="/usr"
 
 ca_port="40004"
 es_port="50005"
