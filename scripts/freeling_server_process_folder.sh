@@ -33,6 +33,11 @@ if [ ! -d "$input_dir" ] || [ "$input_dir" == "" ] ; then
 fi
 
 output_dir="$2"
+if [ "$output_dir" == "" ] ; then
+  echo "ERROR: output data dir: '$output_dir' does not exist or it cannot be read!" >&2
+  echo "" >&2
+  help;
+fi
 mkdir -p "$output_dir"
 
 lang="$3"
@@ -53,7 +58,8 @@ if [ "$lang" == "EN" ] || [ "$lang" == "EN" ] ; then
 fi
 
 for f in $input_dir/*; do
-    echo $f >&2
+    #echo $f >&2
+    #echo -n "."
     bname=`basename "$f"`
     #echo $bname >&2
     cat $f | \

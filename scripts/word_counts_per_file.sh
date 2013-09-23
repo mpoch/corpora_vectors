@@ -5,7 +5,7 @@ set -e
 help()
 {
   cat <<HELP
---- Freeling data extraction ------------------------------------------------------
+--- Word counts per file ----------------------------------------------------------
 USAGE:   {program} <input folder> <output folder>
 -----------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ HELP
 }
 
 echo "" >&2
-echo " --- Freeling data extraction --- " >&2
+echo " --- word counts per file --- " >&2
 echo "" >&2
 
 input_dir="$1"
@@ -32,14 +32,18 @@ if [ "$output_dir" == "" ] ; then
 fi
 mkdir -p "$output_dir"
 
-for f in $input_dir/*; do
-    #echo $f >&2
-    #echo -n "."
-    bname=`basename "$f"`
-    awk '{ if (NF>3 && $3 ~ /^[JVNA].*/ ) print $2}' "$f" \
-    > "$output_dir/$bname"
+for f in "$input_dir"/*; do
+  #echo $f >&2
+  #echo -n "."
+  bn=`basename "$f"`
+  cat "$f" | \
+  sort | \
+  uniq -c | \
+  sort -nr \
+  > "$output_dir/$bn"
 done
-echo "" >&2
+echo ""
+
 
 
 

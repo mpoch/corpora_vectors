@@ -52,21 +52,20 @@ def main():
 
     words={}
     
-    output_byid = codecs.open(os.path.join(output_folder, '-lemmas.byid'), 'w')
-    output_total = codecs.open(os.path.join(output_folder, '-lemmas.total'), 'w')
+    output_byid = codecs.open(os.path.join(output_folder, 'lemmas.byid'), 'w')
+    output_total = codecs.open(os.path.join(output_folder, 'lemmas.total'), 'w')
     #output_tfidf = codecs.open('05-'+output_folder+'-tfidf', 'w')
     #output_col_tfidf = codecs.open('05-'+output_folder+'-col-tfidf', 'w')
     #output_df = codecs.open('05-'+output_folder+'-word-df', 'w')
 
     Nfiles=len([name for name in os.listdir(input_folder)])
-    logging.info(" Number of documents: {0}".format(Nfiles))
 
     TF={}
     TFC={}
     appears={}
 
     for root, dirs, filenames in walk(input_folder):
-        for f in filenames:
+        for f in sorted(filenames):
             #fileid=f.split('-')[0]
             fileid=f
             fullpath=os.path.join(root, f)
@@ -80,54 +79,57 @@ def main():
                         maxfreq=word,num
                     output_byid.write("{0}\t{1}\t{2}\n".format(fileid, word, num) )
 
-                    # Term frequency = TF(ij) = freq of word i in document j
-                    #TF[word,fileid] = float(num)/float(maxfreq[1])
-                    TF[word,fileid] = log10( float(num) ) + 1
-                    logging.debug("\tfileid: {0}\t\tnum:{1} \t\tmax: {2} \t\ttf: {3}".format(fileid, num, maxfreq[1], TF[word,fileid]))
+                    # # Term frequency = TF(ij) = freq of word i in document j
+                    # #TF[word,fileid] = float(num)/float(maxfreq[1])
+                    # TF[word,fileid] = log10( float(num) ) + 1
+                    # logging.debug("\tfileid: {0}\t\tnum:{1} \t\tmax: {2} \t\ttf: {3}".format(fileid, num, maxfreq[1], TF[word,fileid]))
                     
                     if word in words:
                         words[word] = words[word] + int(num)
                     else:
                         words[word] = int(num)
 
-                    if word in appears:
-                        appears[word] = appears[word] + 1
-                    else:
-                        appears[word] = 1
+                    # if word in appears:
+                    #     appears[word] = appears[word] + 1
+                    # else:
+                    #     appears[word] = 1
 
 
     output_byid.close()
 
-    for key, value in TF.iteritems():
-        word=key[0]
-        TF[key] = value * log10(float(Nfiles) / float(appears[word]) )
+    # for key, value in TF.iteritems():
+    #     word=key[0]
+    #     TF[key] = value * log10(float(Nfiles) / float(appears[word]) )
         
-        if word in TFC:
-            TFC[word] = TFC[word] + TF[key]
-        else:
-            TFC[word] = TF[key]
-        
+    #     if word in TFC:
+    #         TFC[word] = TFC[word] + TF[key]
+    #     else:
+    #         TFC[word] = TF[key]
+    
+    logging.info(" Number of documents:   {0}".format(Nfiles))
+
     sorted_list = sorted(words.iteritems(), key=operator.itemgetter(1), reverse=True)
-    logging.info(" total number of words:  "+str(len(sorted_list)))
+    logging.info(" Total number of words: {0}".format(str(len(sorted_list))))
     for i in sorted_list:
-        output_total.write("{0}\tX\t{1}\n".format(i[1], i[0]))
+        #output_total.write("{0}\tX\t{1}\n".format(i[1], i[0]))
+        output_total.write("{0}\t{1}\n".format(i[1], i[0]))
     output_total.close()
 
-    sorted_list = sorted(TF.iteritems(), key=operator.itemgetter(1), reverse=True)
-    for i in sorted_list:
-        output_tfidf.write("{0}\t{1}\t{2}\n".format(i[0][0], i[0][1], i[1]))
-    output_tfidf.close()
+    # sorted_list = sorted(TF.iteritems(), key=operator.itemgetter(1), reverse=True)
+    # for i in sorted_list:
+    #     output_tfidf.write("{0}\t{1}\t{2}\n".format(i[0][0], i[0][1], i[1]))
+    # output_tfidf.close()
 
-    sorted_list = sorted(TFC.iteritems(), key=operator.itemgetter(1), reverse=True)
-    logging.info(" total number of words (tfidf):  "+str(len(sorted_list)))
-    for i in sorted_list:
-        output_col_tfidf.write("{0}\t{1}\n".format(i[0], i[1]))
-    output_col_tfidf.close()
+    # sorted_list = sorted(TFC.iteritems(), key=operator.itemgetter(1), reverse=True)
+    # logging.info(" total number of words (tfidf):  "+str(len(sorted_list)))
+    # for i in sorted_list:
+    #     output_col_tfidf.write("{0}\t{1}\n".format(i[0], i[1]))
+    # output_col_tfidf.close()
     
-    sorted_list = sorted(appears.iteritems())
-    for i in sorted_list:
-        output_df.write("{0}\t{1}\n".format(i[0], i[1]))
-    output_df.close()
+    # sorted_list = sorted(appears.iteritems())
+    # for i in sorted_list:
+    #     output_df.write("{0}\t{1}\n".format(i[0], i[1]))
+    # output_df.close()
  
            
 def is_int(s):
