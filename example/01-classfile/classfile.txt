@@ -1,0 +1,2 @@
+texto-1.txt	class_1
+texto-2.txt	class_2
