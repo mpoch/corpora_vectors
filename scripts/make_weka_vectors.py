@@ -26,6 +26,7 @@ def main():
     parser.add_option("-l", "--log", dest="level_name", default="info", help="choose the logging level: debug, info, warning, error, critical")
     parser.add_option("-r", "--rel", dest="relation", default="relation", help="choose the relation label for the arff file")
     parser.add_option("-b", action="store_true", dest="binary", help="Make binary vectors")
+    parser.add_option("-i", action="store_true", dest="print_id", help="Print file id for each vector")
     parser.add_option("-n", "--nlimit", dest="limit", default="", help="limit the amount of vectors in the arff file")
 
     #Parsing arguments
@@ -42,6 +43,8 @@ def main():
 
     relation = options.relation
     binary = options.binary
+    print_id = options.print_id
+
     if options.limit != "":
         limit = int(options.limit)
     else:
@@ -122,10 +125,7 @@ def main():
                 if file_id != cols[0]:
                     # print latest vector
                     if file_id != '':
-                        sys.stdout.write("'"+file_id+"',")
-                        sys.stdout.write(','.join(str(value) for value in vector.itervalues()))
-                        sys.stdout.write(",'"+file_id+"'")
-                        sys.stdout.write("\n")
+                        print_vector(vector, file_id, print_id)
                         num += 1
                         logging.debug("Vectors in arff file: {0}\t limit: {1}".format(num, limit))
                         if num == limit:
@@ -147,13 +147,16 @@ def main():
 
     if num != limit:                                        	
         # print last vector
-        sys.stdout.write("'"+file_id+"',")
-        sys.stdout.write(','.join(str(value) for value in vector.itervalues()))
-        sys.stdout.write(",'"+file_id+"'")
-        sys.stdout.write("\n")
+        print_vector(vector, file_id, print_id)
         num += 1
     
     logging.info("Number of DATA vectors: "+str(num))             
+
+def print_vector(vector, file_id, print_id):
+    if print_id: sys.stdout.write("'"+file_id+"',")
+    sys.stdout.write(','.join(str(value) for value in vector.itervalues()))
+    if print_id: sys.stdout.write(",'"+file_id+"'")
+    sys.stdout.write("\n")    
 
 if __name__ == "__main__":
     main()
