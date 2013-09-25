@@ -118,8 +118,9 @@ def main():
 
     # print ATTRIBUTES ----------------------------------
     logging.info("printing ATTRIBUTES ...")
+    
     # ATTRIBUTE ID
-    print "@ATTRIBUTE id STRING"
+    if print_id: print "@ATTRIBUTE id STRING"
 
     #for i,key in enumerate(vector.iterkeys()):
     #    print "@ATTRIBUTE "+str(i+1)+" NUMERIC"
@@ -128,7 +129,7 @@ def main():
     logging.info("Number of ATTRIBUTES: "+str(len(vector)))
     
     # ATTRIBUTE ID
-    print "@ATTRIBUTE id STRING"
+    if print_id: print "@ATTRIBUTE id STRING"
 
     # print DATA ----------------------------------------
     logging.info("printing DATA ...")
