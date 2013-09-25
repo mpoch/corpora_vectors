@@ -63,7 +63,7 @@ for f in $input_dir/*; do
     #echo $bname >&2
     cat $f | \
     python scripts/clean_utf8_data.py | \
-    "$fl_dir/bin/analyzer_client" 50005 \
+    "$fl_dir/bin/analyzer_client" $port \
     > "$output_dir/$bname"
     
 done
