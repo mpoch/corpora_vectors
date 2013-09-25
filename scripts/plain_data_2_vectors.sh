@@ -33,5 +33,5 @@ python scripts/counter.py tmp/04-counts tmp/05-statistics
 bash scripts/feature_selection.sh tmp/05-statistics/lemmas.total tmp/06-features/features.txt
 
 # Make weka vectors
-python scripts/make_weka_vectors.py tmp/05-statistics/lemmas.byid tmp/06-features/features.txt > tmp/07-arff/vectors.arff
+python scripts/make_weka_vectors.py tmp/05-statistics/lemmas.byid tmp/06-features/features.txt -c tmp/01-classfile/classfile.txt > tmp/07-arff/vectors.arff
 

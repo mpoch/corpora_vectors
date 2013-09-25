@@ -25,6 +25,7 @@ def main():
     #Defining options   
     parser.add_option("-l", "--log", dest="level_name", default="info", help="choose the logging level: debug, info, warning, error, critical")
     parser.add_option("-r", "--rel", dest="relation", default="relation", help="choose the relation label for the arff file")
+    parser.add_option("-c", "--class", dest="classfile", default="", help="File with input files name and their classes separated by tab.")
     parser.add_option("-b", action="store_true", dest="binary", help="Make binary vectors")
     parser.add_option("-i", action="store_true", dest="print_id", help="Print file id for each vector")
     parser.add_option("-n", "--nlimit", dest="limit", default="", help="limit the amount of vectors in the arff file")
@@ -44,11 +45,17 @@ def main():
     relation = options.relation
     binary = options.binary
     print_id = options.print_id
+    classfile = options.classfile
 
     if options.limit != "":
         limit = int(options.limit)
     else:
         limit = options.limit
+
+    if classfile != "":
+        classbool = True
+    else:
+        classbool = False
     
     ##### Mandatory arguments validation
     logging.info("---- MAKE_VECTORS ----")
@@ -66,6 +73,18 @@ def main():
        with open(compFilePath) as compf: pass
     except IOError as e:
        parser.error(" components list :  "+compFilePath+" does not exist!")
+
+    classdict = {}
+    if classbool:
+        logging.info(" Classfile :  "+classfile)
+        try:
+            with open(classfile) as f:
+                for line in f:
+                    line=line.strip()
+                    fname,classname = line.split("\t")
+                    classdict[fname] = classname
+        except IOError as e:
+           parser.error(" classfile :  "+classfile+" does not exist!")        
 
     logging.info("Vectors amount limit: {0}".format(limit))
 
@@ -125,7 +144,7 @@ def main():
                 if file_id != cols[0]:
                     # print latest vector
                     if file_id != '':
-                        print_vector(vector, file_id, print_id)
+                        print_vector(vector, file_id, print_id, classbool, classdict)
                         num += 1
                         logging.debug("Vectors in arff file: {0}\t limit: {1}".format(num, limit))
                         if num == limit:
@@ -147,16 +166,17 @@ def main():
 
     if num != limit:                                        	
         # print last vector
-        print_vector(vector, file_id, print_id)
+        print_vector(vector, file_id, print_id, classbool, classdict)
         num += 1
     
-    logging.info("Number of DATA vectors: "+str(num))             
+    logging.info("Number of DATA vectors: {0}".format(str(num)))
 
-def print_vector(vector, file_id, print_id):
-    if print_id: sys.stdout.write("'"+file_id+"',")
+def print_vector(vector, file_id, print_id, classbool, classdict):
+    if print_id: sys.stdout.write("'{0}',".format(file_id))
     sys.stdout.write(','.join(str(value) for value in vector.itervalues()))
-    if print_id: sys.stdout.write(",'"+file_id+"'")
-    sys.stdout.write("\n")    
+    if print_id: sys.stdout.write("'{0}',".format(file_id))
+    if classbool: sys.stdout.write(",{0}".format(classdict[file_id]))
+    sys.stdout.write("\n")  
 
 if __name__ == "__main__":
     main()
