@@ -23,12 +23,19 @@ mkdir tmp
 cp -R example/* tmp/
 ```
 
-Run the program with example data (example data is in Spanish):
+4. Configure freeling_server_start.sh and freeling_server_process_folder.sh with your Freeling path
+
+5. Start Freeling servers with:
+```
+bash freeling_server_start.sh
+```
+
+6. Run the program with example data (example data is in Spanish):
 ```
 bash scripts/plain_data_2_vectors.sh es
 ```
 
-The resulting weka file can be found in tmp/07-arff
+7. The resulting weka file can be found in tmp/07-arff
 
 
 
