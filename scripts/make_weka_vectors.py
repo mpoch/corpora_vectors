@@ -75,6 +75,7 @@ def main():
        parser.error(" components list :  "+compFilePath+" does not exist!")
 
     classdict = {}
+    classset = set()
     if classbool:
         logging.info(" Classfile :  "+classfile)
         try:
@@ -83,6 +84,7 @@ def main():
                     line=line.strip()
                     fname,classname = line.split("\t")
                     classdict[fname] = classname
+                    classset.add(classname)
         except IOError as e:
            parser.error(" classfile :  "+classfile+" does not exist!")        
 
@@ -119,7 +121,7 @@ def main():
     # print ATTRIBUTES ----------------------------------
     logging.info("printing ATTRIBUTES ...")
     
-    # ATTRIBUTE ID
+    # Attribute Id
     if print_id: print "@ATTRIBUTE id STRING"
 
     #for i,key in enumerate(vector.iterkeys()):
@@ -128,8 +130,10 @@ def main():
         print "@ATTRIBUTE {0} NUMERIC".format(key)
     logging.info("Number of ATTRIBUTES: "+str(len(vector)))
     
-    # ATTRIBUTE ID
+    # Attirbute Id
     if print_id: print "@ATTRIBUTE id STRING"
+
+    if classbool: print "@ATTRIBUTE class {1}{0}{2}".format(",".join(sorted(classset)),"{","}")
 
     # print DATA ----------------------------------------
     logging.info("printing DATA ...")
